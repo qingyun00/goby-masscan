@@ -1,0 +1,31 @@
+{
+    "name": "masscan",
+    "publisher": "qingyun",
+    "description": "masscan1-65535",
+    "version": "0.1.0",
+    "icon": "src/image/ing.png",
+    "engines": "0.1.0",
+    "initEvents": "",
+    "main": "./src/extension.js",
+    "contributes": {
+        "configuration": {
+            "Xc": {
+                "type": "string",
+                "default": "100",
+                "description": "默认线程为100"
+            }
+        },
+        "views": {
+            "scanDia": [
+                {
+                    "command": "masscan",
+                    "title": "MASSCAN",
+                    "icon" : "src/image/ing.png"
+                }
+            ]
+        }
+    },
+    "scripts": {},
+    "devDependencies": {},
+    "dependencies": {}
+}
