@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>masscan全端口</title>
+  <link rel="stylesheet" href="assets/lib/layui/css/layui.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/font/iconfont.css">
+</head>
+
+<body>
+  <div class="layui-form-item clearfix">
+    <div class="layui-input-block marLeft0 fl search-input-wrap">
+      <input id="masscan-input" type="text" name="title" required lay-verify="required" placeholder="请输入IP地址"
+        autocomplete="off"
+        class="layui-input">
+      <span class="masscan-search"><i class="iconfont iconfangdajing"></i></span>
+    </div>
+    <button class="layui-btn export-ip fr" lay-submit lay-filter="formDemo">导入当前页</button>
+  </div>
+  <div class="layui-table-wrap">
+    <table lay-filter="demo" id="ip-table" class="layui-table">
+      <thead>
+      <tr>
+        <th min-width="50">IP</th>
+        <th min-width="50">端口</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      </tr>
+      </tbody>
+    </table>
+    <div class="no-data">
+    </div>
+    <div class="loading">
+      <i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop"></i>
+    </div>
+  </div>
+  <div id="page"></div>
+
+  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <script src="assets/js/jquery.base64.js"></script>
+  <script src="assets/lib/layui/layui.all.js"></script>
+  <script>
+    let goby = parent.goby;
+    var masscansu = parent.MasscanSu;
+    var page;
+    function get1json(){//获取数据
+      $.ajax({
+        type:"get",
+        url:"./1.json",
+        dataType:"json",
+        success(res){
+          let data = processData(res);
+          var laypage = layui.laypage;
+          laypage.render({//分页
+            elem: 'page', 
+            limit: 9,
+            count: data.length,
+            curr:page?page:1,
+            jump: function(obj, first) {
+              if(!first){
+                page = obj.curr;
+              }
+              Render(obj.curr,data);
+            }
+          });
+        },
+        error(res){
+          $(".no-data").show();
+          $(".loading").hide();
+        }
+      })
+    }
+    
+    function processData(data){//处理数据
+      return data.map(v=>{
+        return {
+            "ip" : v.ip,
+            "port" : v.ports[0].proto == 'tcp' ? v.ports[0].port : `U:${v.ports[0].port}`
+        }
+      })
+    }
+
+    function Render(page,data){//渲染
+      let html = "";
+      let activeData = data.slice((page-1)*9 , (page) * 9);
+      activeData.forEach((v,k)=>{
+        html += `<tr>
+            <td>${v['ip']}</td>
+            <td>${v['port']}</td>
+          </tr>`
+      });
+      $(".loading").hide();
+      $("#ip-table tbody").html(html);
+    }
+
+    function LoopRequest(){//循环请求
+      setTimeout(()=>{//延迟三秒在读取文件 给用户一种延迟错觉
+        setInterval(() => {//每隔4秒读取文件
+          get1json();
+        }, 4000);
+      },3000)
+    }
+
+    $("#masscan-input").keydown(function(e) {
+      
+      if(e.keyCode == 13) {  
+        var ip = $('#masscan-input').val();
+        $(".no-data").hide();
+        $(".loading").show();
+        $("#ip-table tbody").html("");
+        page = 1;
+        if (ip <= 0){
+          goby.showErrorMessage("ip地址不能为空");
+        }else {
+          console.log(ip)
+          masscansu.scan(ip);
+          LoopRequest();
+        }
+
+      }
+
+    });
+
+    // 按钮搜索
+    $(".masscan-search").click(function() {
+      var ip = $('#masscan-input').val();
+      $(".no-data").hide();
+      $(".loading").show();
+      $("#ip-table tbody").html("");
+      page = 1;
+      if (ip <= 0){
+        goby.showErrorMessage("ip地址不能为空");
+      }else {
+        console.log(ip)
+        masscansu.scan(ip);
+        LoopRequest();
+      }
+
+    });
+
+    //导入ip与端口
+    $(".export-ip").click(function (){
+      var {ips,ports} = parent.MasscanSu.readjson();
+      console.log(ips);
+      console.log(ports);
+      console.log(goby);
+      goby.addScanIps(ips, 1);
+      goby.addScanPorts(ports, 1);
+      goby.showSuccessMessage("导入扫描对象成功");
+      goby.closeIframeDia();
+    })
+
+  </script>
+</body>
+
+</html>
