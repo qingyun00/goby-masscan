@@ -1,6 +1,11 @@
 必须已经安装了masscan，且是全局变量，否则无法扫描
+
 masscan请自行安装
+
+
 Mac与Linux下需要设置sudo免密码输入
+
+
 Mac设置方式：
 https://blog.csdn.net/zlfing/article/details/90448667
 
