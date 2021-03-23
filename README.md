@@ -2,9 +2,7 @@
 
 masscan请自行安装
 
-
 Mac与Linux下需要设置sudo免密码输入
-
 
 Mac设置方式：
 https://blog.csdn.net/zlfing/article/details/90448667
@@ -24,10 +22,10 @@ masscan全端口扫描，默认就是0-65535，不用在改了。
 使用的话十分简单如下图：
 ![](https://z3.ax1x.com/2021/03/22/6TliT0.png)
 点击后进入如下图：
-![](https://z3.ax1x.com/2021/03/22/6TlEfU.png)
+![](https://z3.ax1x.com/2021/03/23/6TciY8.png)
 
 输入你的目标点击回车，或者放大镜都行，然后出现命令行界面，等待扫描结束：
-![](https://z3.ax1x.com/2021/03/22/6Tlm6J.png)
+![](https://z3.ax1x.com/2021/03/23/6TcQYT.png)
 
 在命令行扫描完成后在点击导入页面就会自动导入ip与端口，剩下的就是开启goby扫描吧
 ![](https://z3.ax1x.com/2021/03/22/6TlKmR.png)
