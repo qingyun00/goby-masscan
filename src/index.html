@@ -107,39 +107,38 @@
 
     $("#masscan-input").keydown(function(e) {
       
-      if(e.keyCode == 13) {  
-        var ip = $('#masscan-input').val();
-        $(".no-data").hide();
-        $(".loading").show();
-        $("#ip-table tbody").html("");
-        page = 1;
-        if (ip <= 0){
-          goby.showErrorMessage("ip地址不能为空");
-        }else {
-          console.log(ip)
-          masscansu.scan(ip);
-          LoopRequest();
+		if(e.keyCode == 13) {  
+			var ip = $('#masscan-input').val();
+			if(!ip.trim()||ip<=0){
+				goby.showErrorMessage("ip地址不能为空");;
+				return;
+			}
+			$(".no-data").hide();
+			$(".loading").show();
+			$("#ip-table tbody").html("");
+			page = 1;
+			console.log(ip)
+			masscansu.scan(ip);
+			LoopRequest();
         }
 
-      }
 
     });
 
     // 按钮搜索
     $(".masscan-search").click(function() {
-      var ip = $('#masscan-input').val();
-      $(".no-data").hide();
-      $(".loading").show();
-      $("#ip-table tbody").html("");
-      page = 1;
-      if (ip <= 0){
-        goby.showErrorMessage("ip地址不能为空");
-      }else {
-        console.log(ip)
-        masscansu.scan(ip);
-        LoopRequest();
-      }
-
+		var ip = $('#masscan-input').val();
+		if(!ip.trim()||ip<=0){
+			goby.showErrorMessage("ip地址不能为空");;
+			return;
+		}
+		$(".no-data").hide();
+		$(".loading").show();
+		$("#ip-table tbody").html("");
+		page = 1;
+		console.log(ip)
+		masscansu.scan(ip);
+		LoopRequest();
     });
 
     //导入ip与端口
